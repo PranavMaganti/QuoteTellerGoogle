@@ -1,9 +1,9 @@
 import {dialogflow, Image, DialogflowConversation} from 'actions-on-google';
 import {Suggestions, BasicCard}
   from 'actions-on-google/dist/service/actionssdk';
-import * as functions from 'firebase-functions';
 import * as firebase from 'firebase';
-
+import express from 'express';
+import bodyParser from 'body-parser';
 
 const app = dialogflow();
 
@@ -107,4 +107,4 @@ app.intent('Default Fallback Intent', (conv) => {
   conv.ask(reprompt);
 });
 
-exports.quotey = functions.https.onRequest(app);
+express().use(bodyParser.json(), app).listen(3000);
