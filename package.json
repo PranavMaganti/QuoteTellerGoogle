@@ -18,7 +18,8 @@
     "typescript": "^3.7.2"
   },
   "scripts": {
-    "build": "npm run lint && tsc",
+    "tsc": "tsc",
+    "postinstall": "npm run tsc",
     "start": "node dist/index.js",
     "lint": "eslint . --ext .ts --fix"
   },
