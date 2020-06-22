@@ -6,6 +6,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 
 const app = dialogflow();
+const PORT = process.env.PORT || 5000;
 
 const config = {
   apiKey: process.env.apiKey,
@@ -107,4 +108,4 @@ app.intent('Default Fallback Intent', (conv) => {
   conv.ask(reprompt);
 });
 
-express().use(bodyParser.json(), app).listen(3000);
+express().use(bodyParser.json(), app).listen(PORT);
