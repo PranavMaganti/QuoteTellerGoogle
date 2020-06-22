@@ -93,15 +93,15 @@ app.intent('tellQuote', async (conv, {quoteType}) => {
     return;
   }
 
-  sendQuote(conv, quoteType);
+  await sendQuote(conv, quoteType);
 });
 
-app.intent('quote_yes', (conv, {quoteType}) => {
+app.intent('quote_yes', async (conv, {quoteType}) => {
   if (!(typeof quoteType === 'string')) {
     conv.ask(reprompt);
     return;
   }
-  sendQuote(conv, quoteType);
+  await sendQuote(conv, quoteType);
 });
 
 app.intent('Default Fallback Intent', (conv) => {
