@@ -46,7 +46,7 @@ async function getQuote(quoteType: string): Promise<string | Array<string>> {
  * @param { string } quoteType the type of quote to return to the user
  */
 function sendQuote(conv: DialogflowConversation, quoteType: string) {
-  getQuote(quoteType).then((quote: string | Array<string>) => {
+  return getQuote(quoteType).then((quote: string | Array<string>) => {
     conv.ask('Here\'s a quote for you:');
 
     if (quote instanceof Array) {
