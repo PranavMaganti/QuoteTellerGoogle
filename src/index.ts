@@ -66,6 +66,7 @@ function sendQuote(conv: DialogflowConversation, quoteType: string) {
       quoteText.speak(quote + '.');
     }
     quoteText.endParagraph();
+    quoteText.break("500ms");
     quoteText.startParagraph();
     quoteText.speak("Would you like to hear another quote?");
     quoteText.endParagraph();
