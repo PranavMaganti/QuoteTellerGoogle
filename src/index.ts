@@ -58,7 +58,13 @@ async function getQuote(quoteType: string): Promise<string | Array<string>> {
  */
 function sendQuote(conv: DialogflowConversation, quoteType: string) {
   return getQuote(quoteType).then((quote: string | Array<string>) => {
-    // const quoteText = new SSML();
+    const quoteText = new SSML();
+    quoteText.startParagraph();
+    quoteText.speak(quote[0] + '.');
+    quoteText.endParagraph();
+    quoteText.startParagraph();
+    quoteText.speak("Would you like to hear another quote?");
+    quoteText.endParagraph();
 
     if (quote instanceof Array) {
       if (conv.surface.capabilities.has('actions.capability.SCREEN_OUTPUT')) {
@@ -75,27 +81,23 @@ function sendQuote(conv: DialogflowConversation, quoteType: string) {
           }),
         }));
         conv.ask(new Suggestions(suggestions));
+        conv.ask(anotherQuote);
       } else{
-        conv.ask(quote[0] + '.');
+        conv.ask(quoteText.toString());
       }
     } else {
-      conv.ask(quote);
       if (conv.surface.capabilities.has('actions.capability.SCREEN_OUTPUT')) {
+        conv.ask(quote);
         conv.ask(new Suggestions(suggestions));
+        conv.ask(anotherQuote);
+      } else {
+        conv.ask(quoteText.toString());
       }
     }
-    conv.ask(anotherQuote);
   });
 }
 
 app.intent('WelcomeIntent', (conv) => {
-  // const resFancy = `I have a variety of different quotes so if you would like
-  //    to hear one just ask me for one`;
-  // const res =
-  //    `I can tell you a variety of different quotes such as Famous, Boook, 
-  //    Inspirational or Google quotes, so if you would like hear one just ask 
-  //    me for one`;
-
   const welcome = new SSML();
   welcome.speak(`Welcome to quote teller. I have a variety of different quotes \
   for you to choose from. If you'd like to hear one just say, "tell me `);
