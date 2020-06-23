@@ -1,7 +1,7 @@
 import {dialogflow, Image, DialogflowConversation} from 'actions-on-google';
 import {Suggestions, BasicCard, SimpleResponse}
   from 'actions-on-google/dist/service/actionssdk';
-import { SSML, Rate } from './ssml';
+import {SSML, Rate} from './ssml';
 import * as firebase from 'firebase';
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -23,8 +23,8 @@ const database = firebase.database();
 
 const suggestions = ['Famous', 'Inspirational', 'Book'];
 const anotherQuote = 'Would you like to hear another quote?';
-const reprompt = "Sorry, I didn't understand that. You can ask for a famous \
-quote, an inspirational quote or a book quote";
+const reprompt = `Sorry, I didn't understand that. You can ask for a famous 
+quote, an inspirational quote or a book quote`;
 
 /**
  * Capitilises the first letter of a string
@@ -55,39 +55,42 @@ async function getQuote(quoteType: string): Promise<string | Array<string>> {
  * Retrives and returns a quote of a given type to the user
  * @param { DialogflowConversation } conv the current dialogflow conversation
  * @param { string } quoteType the type of quote to return to the user
+ * @return { Promise<void> } return for DialogflowConversation
  */
-function sendQuote(conv: DialogflowConversation, quoteType: string) {
+function sendQuote(
+    conv: DialogflowConversation,
+    quoteType: string): Promise<void> {
   return getQuote(quoteType).then((quote: string | Array<string>) => {
     const quoteText = new SSML();
     quoteText.startParagraph();
-    if(quote instanceof Array) {
+    if (quote instanceof Array) {
       quoteText.speak(quote[0] + '.');
     } else {
       quoteText.speak(quote + '.');
     }
     quoteText.endParagraph();
-    quoteText.break("500ms");
+    quoteText.break('500ms');
     quoteText.startParagraph();
-    quoteText.speak("Would you like to hear another quote?");
+    quoteText.speak('Would you like to hear another quote?');
     quoteText.endParagraph();
 
     if (quote instanceof Array) {
       if (conv.surface.capabilities.has('actions.capability.SCREEN_OUTPUT')) {
         conv.ask(new SimpleResponse({
-          text: "Here's a quote for you:",
-          speech: quote[0]
+          text: 'Here\'s a quote for you:',
+          speech: quote[0],
         }));
         conv.ask(new BasicCard({
           title: capitaliseFirstLetter(quoteType) + ' Quote',
           text: quote[0],
           image: new Image({
             url: quote[1],
-            alt: capitaliseFirstLetter(quoteType)  + ' Quote',
+            alt: capitaliseFirstLetter(quoteType) + ' Quote',
           }),
         }));
         conv.ask(new Suggestions(suggestions));
         conv.ask(anotherQuote);
-      } else{
+      } else {
         conv.ask(quoteText.toString());
       }
     } else {
@@ -104,17 +107,17 @@ function sendQuote(conv: DialogflowConversation, quoteType: string) {
 
 app.intent('WelcomeIntent', (conv) => {
   const welcome = new SSML();
-  welcome.speak(`Welcome to quote teller. I have a variety of different quotes \
+  welcome.speak(`Welcome to quote teller. I have a variety of different quotes 
   for you to choose from. If you'd like to hear one just say, "tell me `);
-  welcome.prosody("a", Rate.MEDIUM);
-  welcome.break("300ms");
+  welcome.prosody('a', Rate.MEDIUM);
+  welcome.break('300ms');
   welcome.speak(`", followed by the type of quote you'd like to hear.`);
-  
+
   if (conv.surface.capabilities.has('actions.capability.SCREEN_OUTPUT')) {
     conv.ask(new Suggestions(suggestions));
   } else {
-    welcome.speak("I can tell you a book quote, a famous quote, an \
-    inspirational quote or even the quote of the day.")
+    welcome.speak(`I can tell you a book quote, a famous quote, an 
+    inspirational quote or even the quote of the day.`);
   }
   conv.ask(welcome.toString());
 });
@@ -141,8 +144,8 @@ app.intent('Default Fallback Intent', (conv) => {
 });
 
 app.fallback((conv) => {
-  conv.ask(reprompt)
-})
+  conv.ask(reprompt);
+});
 
 express().use(bodyParser.json(), app).listen(PORT);
 
