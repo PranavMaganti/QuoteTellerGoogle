@@ -60,7 +60,11 @@ function sendQuote(conv: DialogflowConversation, quoteType: string) {
   return getQuote(quoteType).then((quote: string | Array<string>) => {
     const quoteText = new SSML();
     quoteText.startParagraph();
-    quoteText.speak(quote[0] + '.');
+    if(quote instanceof Array) {
+      quoteText.speak(quote[0] + '.');
+    } else {
+      quoteText.speak(quote + '.');
+    }
     quoteText.endParagraph();
     quoteText.startParagraph();
     quoteText.speak("Would you like to hear another quote?");
