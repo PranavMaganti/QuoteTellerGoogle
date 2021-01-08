@@ -1,10 +1,11 @@
-import {dialogflow, Image, DialogflowConversation} from 'actions-on-google';
-import {Suggestions, BasicCard, SimpleResponse}
+import {BasicCard, SimpleResponse, Suggestions}
   from 'actions-on-google/dist/service/actionssdk';
-import {SSML, Rate} from './ssml';
-import * as firebase from 'firebase';
-import express from 'express';
+import {DialogflowConversation, Image, dialogflow} from 'actions-on-google';
+import {Rate, SSML} from './ssml';
+
 import bodyParser from 'body-parser';
+import express from 'express';
+import firebase from 'firebase';
 
 const app = dialogflow();
 const PORT = process.env.PORT || 5001;
